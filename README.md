@@ -4,7 +4,7 @@ The ZeroJudge problem set scraper downloads problem pages and
 transforms them to JudgeGirl format.
 
 This repository provides the scraper problem. The scrapped results are
-saved in the `problems` branch.
+saved in the [`problems`](https://github.com/jerry73204/zerojudge-scraper/tree/problems) branch.
 
 ## Prerequisite
 
