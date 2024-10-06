@@ -1,17 +1,16 @@
 mod problem;
 
-use std::{
-    fs,
-    path::{Path, PathBuf},
-};
-
 use crate::problem::{Problem, Sample};
 use clap::Parser;
 use eyre::WrapErr;
 use fantoccini::{elements::Element, Client, ClientBuilder, Locator};
 use futures::{stream, StreamExt, TryStreamExt};
 use itertools::chain;
-use markdown::{Block, ListItem, Span};
+use markdown::{Block, Span};
+use std::{
+    fs,
+    path::{Path, PathBuf},
+};
 
 /// The ZeroJudge crawler.
 #[derive(Parser)]
@@ -100,16 +99,14 @@ async fn crawl(client: Client, url: &str) -> eyre::Result<Vec<Problem>> {
                     element_to_markdown(&elem).await?
                 };
 
-                let input = client
-                    .find(Locator::Id("problem_theinput"))
-                    .await?
-                    .html(true)
-                    .await?;
-                let output = client
-                    .find(Locator::Id("problem_theoutput"))
-                    .await?
-                    .html(true)
-                    .await?;
+                let input_desc = {
+                    let elem = client.find(Locator::Id("problem_theinput")).await?;
+                    element_to_markdown(&elem).await?
+                };
+                let output_desc = {
+                    let elem = client.find(Locator::Id("problem_theoutput")).await?;
+                    element_to_markdown(&elem).await?
+                };
 
                 let samples: Vec<_> = {
                     let rows = client
@@ -146,8 +143,8 @@ async fn crawl(client: Client, url: &str) -> eyre::Result<Vec<Problem>> {
                 let problem = Problem {
                     title,
                     content,
-                    input,
-                    output,
+                    input_desc,
+                    output_desc,
                     hint,
                     samples,
                 };
@@ -164,91 +161,9 @@ async fn crawl(client: Client, url: &str) -> eyre::Result<Vec<Problem>> {
 
 /// Transform an HTML element to Markdown blocks.
 async fn element_to_markdown(root: &Element) -> eyre::Result<Vec<Block>> {
-    async fn visit_p_tag(elem: &Element) -> eyre::Result<Block> {
-        let text = elem.text().await?;
-        let block = Block::Paragraph(vec![Span::Text(text)]);
-        Ok(block)
-    }
-
-    async fn visit_h1_tag(elem: &Element) -> eyre::Result<Block> {
-        let text = elem.text().await?;
-        let block = Block::Paragraph(vec![Span::Text(text)]);
-        Ok(block)
-    }
-
-    async fn visit_h2_tag(elem: &Element) -> eyre::Result<Block> {
-        let text = elem.text().await?;
-        let block = Block::Paragraph(vec![Span::Text(text)]);
-        Ok(block)
-    }
-
-    async fn visit_h3_tag(elem: &Element) -> eyre::Result<Block> {
-        let text = elem.text().await?;
-        let block = Block::Paragraph(vec![Span::Text(text)]);
-        Ok(block)
-    }
-
-    async fn visit_h4_tag(elem: &Element) -> eyre::Result<Block> {
-        let text = elem.text().await?;
-        let block = Block::Paragraph(vec![Span::Text(text)]);
-        Ok(block)
-    }
-
-    async fn visit_ol_tag(elem: &Element) -> eyre::Result<Block> {
-        let children = elem.find_all(Locator::XPath("li")).await?;
-        let items: Vec<_> = stream::iter(children)
-            .map(|item| async move {
-                let text = item.text().await?;
-                eyre::Ok(ListItem::Simple(vec![Span::Text(text)]))
-            })
-            .buffered(1)
-            .try_collect()
-            .await?;
-
-        Ok(Block::UnorderedList(items))
-    }
-
-    async fn visit_ul_tag(elem: &Element) -> eyre::Result<Block> {
-        let children = elem.find_all(Locator::XPath("li")).await?;
-        let items: Vec<_> = stream::iter(children)
-            .map(|item| async move {
-                let text = item.text().await?;
-                eyre::Ok(ListItem::Simple(vec![Span::Text(text)]))
-            })
-            .buffered(1)
-            .try_collect()
-            .await?;
-
-        Ok(Block::UnorderedList(items))
-    }
-
-    async fn visit_unsupported_tag(elem: &Element) -> eyre::Result<Block> {
-        let text = elem.text().await?;
-        Ok(Block::Raw(text))
-    }
-
-    let elems = root.find_all(Locator::XPath("*")).await?;
-    let blocks: Vec<_> = stream::iter(elems)
-        .map(|elem| async move {
-            let block = match elem.tag_name().await?.as_str() {
-                "p" => visit_p_tag(&elem).await?,
-                "h1" => visit_h1_tag(&elem).await?,
-                "h2" => visit_h2_tag(&elem).await?,
-                "h3" => visit_h3_tag(&elem).await?,
-                "h4" => visit_h4_tag(&elem).await?,
-                "ol" => visit_ol_tag(&elem).await?,
-                "ul" => visit_ul_tag(&elem).await?,
-                tag_name => {
-                    dbg!(tag_name);
-                    visit_unsupported_tag(&elem).await?
-                }
-            };
-            eyre::Ok(block)
-        })
-        .buffered(1)
-        .try_collect()
-        .await?;
-
+    let html = root.html(true).await?;
+    let markdown = html2md::parse_html(&html);
+    let blocks = markdown::tokenize(&markdown);
     Ok(blocks)
 }
 
@@ -257,8 +172,8 @@ fn save_problem(problem_dir: &Path, problem: Problem) -> eyre::Result<()> {
     let Problem {
         title,
         content,
-        input,
-        output,
+        input_desc,
+        output_desc,
         hint,
         samples,
     } = problem;
@@ -293,9 +208,9 @@ fn save_problem(problem_dir: &Path, problem: Problem) -> eyre::Result<()> {
         [make_title("Task Description".to_string())],
         content,
         [make_title("Input Format".to_string())],
-        [Block::Paragraph(vec![Span::Text(input.to_string())])],
+        input_desc,
         [make_title("Output Format".to_string())],
-        [Block::Paragraph(vec![Span::Text(output.to_string())])],
+        output_desc,
         samples_blocks,
     )
     .collect();

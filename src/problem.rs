@@ -4,8 +4,8 @@ use markdown::Block;
 pub struct Problem {
     pub title: String,
     pub content: Vec<Block>,
-    pub input: String,
-    pub output: String,
+    pub input_desc: Vec<Block>,
+    pub output_desc: Vec<Block>,
     pub hint: String,
     pub samples: Vec<Sample>,
 }
