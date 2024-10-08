@@ -1,11 +1,14 @@
-.PHONY: build run clean
+.PHONY: build download convert clean
 
 build:
 	cargo build --release --all-targets
 
-run:
+download:
 	rm -rf problems
-	parallel --tty -j0 --halt-on-error now,fail=1 ::: geckodriver 'cargo run --release'
+	parallel --tty -j0 --halt-on-error now,fail=1 ::: geckodriver 'cargo run --bin download --release'
+
+convert:
+	cargo run --bin convert --release
 
 clean:
 	cargo clean
