@@ -4,6 +4,7 @@ build:
 	cargo build --release --all-targets
 
 download:
+	rye sync --pyproject download/pyproject.toml
 	rye run --pyproject download/pyproject.toml download
 
 convert:
