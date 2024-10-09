@@ -4,11 +4,10 @@ build:
 	cargo build --release --all-targets
 
 download:
-	rm -rf problems
-	parallel --tty -j0 --halt-on-error now,fail=1 ::: geckodriver 'cargo run --bin download --release'
+	rye run --pyproject download/pyproject.toml download
 
 convert:
-	cargo run --bin convert --release
+	cargo run --manifest-path convert/Cargo.toml --release
 
 clean:
 	cargo clean
