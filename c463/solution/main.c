@@ -1,4 +1,11 @@
+/*
+  Submission ID: 15613579
+  AC (25ms, 1.6MB)
+ */
+
 #include <assert.h>
+#include <inttypes.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -10,7 +17,7 @@ typedef struct node {
     int height;
 } Node;
 
-int max(int a, int b) {
+int max(int64_t a, int64_t b) {
     if (a >= b) {
         return a;
     } else {
@@ -49,7 +56,7 @@ int main() {
     }
 
     /* Initialize the total subtree height to zero. */
-    int total_height = 0;
+    int64_t total_height = 0;
 
     /* Scan for leaf nodes in the node array. Whenever a leaf node is
        found, start to traverse from the leaf to the root. */
@@ -61,7 +68,7 @@ int main() {
 
         /* Start traversal from the leaf to its (grand-)parents in an
            inner loop. */
-        int height = 0;
+        int64_t height = 0;
         Node *node = start;
         node->height = 0;
 
@@ -81,7 +88,7 @@ int main() {
                    is a root. Since all children of this root are visited,
                    we print the results here and finish the program. */
                 int root = (node - nodes) + 1;
-                printf("%d\n%d\n", root, total_height);
+                printf("%d\n%" PRId64 "\n", root, total_height);
                 return 0;
             } else {
                 /* Visit the node's parent. Increase the parent's
