@@ -1,3 +1,8 @@
+/*
+  Submission ID: 15613550
+  AC (2ms, 88KB)
+*/
+
 #include <stdio.h>
 #include <string.h>
 
