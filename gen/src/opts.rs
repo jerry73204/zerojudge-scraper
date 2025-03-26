@@ -1,4 +1,4 @@
-use std::ops::RangeInclusive;
+use std::{ops::RangeInclusive, path::PathBuf};
 
 use clap::Parser;
 use eyre::{Context, ensure};
@@ -7,7 +7,7 @@ use eyre::{Context, ensure};
 pub struct Opts {
     pub problem_id: String,
 
-    #[clap(default_value = "1")]
+    #[clap(default_value = "10")]
     pub num_tests: u32,
 
     #[clap(
@@ -15,6 +15,9 @@ pub struct Opts {
         value_parser = parse_difficulty
     )]
     pub difficulty: RangeInclusive<u32>,
+
+    #[clap(long, default_value = "config")]
+    pub config: PathBuf,
 }
 
 fn parse_difficulty(arg: &str) -> eyre::Result<RangeInclusive<u32>> {

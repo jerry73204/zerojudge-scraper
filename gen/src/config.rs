@@ -1,4 +1,4 @@
-use eyre::{bail, ensure};
+use eyre::{Context, bail, ensure};
 use serde::Deserialize;
 use std::path::Path;
 
@@ -20,8 +20,10 @@ impl LevelList {
     where
         P: AsRef<Path>,
     {
-        let text = std::fs::read_to_string(path)?;
-        let list: Self = json5::from_str(&text)?;
+        let text = std::fs::read_to_string(&path)
+            .wrap_err_with(|| format!("unable to open '{}'", path.as_ref().display()))?;
+        let list: Self = json5::from_str(&text)
+            .wrap_err_with(|| format!("unable to open '{}'", path.as_ref().display()))?;
 
         let Some(last) = list.level.last() else {
             bail!("at least one level is required");

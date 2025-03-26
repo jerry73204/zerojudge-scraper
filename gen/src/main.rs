@@ -6,6 +6,7 @@ pub mod sampler;
 use crate::sampler::TestSampler;
 use clap::Parser;
 use config::LevelList;
+use eyre::ensure;
 use opts::Opts;
 use std::{collections::HashMap, fs, path::Path, sync::LazyLock};
 
@@ -41,10 +42,17 @@ fn main() -> eyre::Result<()> {
         problem_id,
         num_tests,
         difficulty,
+        config: config_dir,
     } = opts;
 
     let configs: LevelList = {
-        let config_dir = Path::new(env!("CARGO_MANIFEST_DIR")).join("config");
+        ensure!(
+            config_dir.exists(),
+            "expect the configuration directory '{}' to exist. \
+	     please create one or specfiy the path using --config",
+            config_dir.display()
+        );
+
         let config_file = config_dir.join(format!("{problem_id}.json5"));
         LevelList::open(config_file)?
     };
@@ -59,7 +67,14 @@ fn main() -> eyre::Result<()> {
     let samples = sampler.sample_many(&configs, difficulty_range, num_tests);
 
     let output_dir = Path::new(&problem_id);
-    fs::create_dir(output_dir)?;
+
+    if output_dir.exists() {
+        eprintln!(
+            "the output directory '{}' already exists. the generated output files will be overwritten.",
+            output_dir.display()
+        );
+    }
+    fs::create_dir_all(output_dir)?;
 
     for (ix, sample) in samples.into_iter().enumerate() {
         let input_file = output_dir.join(format!("{ix}.in"));
