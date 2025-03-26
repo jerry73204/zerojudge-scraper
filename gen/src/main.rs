@@ -1,11 +1,13 @@
+pub mod config;
 pub mod e288;
 pub mod opts;
 pub mod sampler;
 
 use crate::sampler::TestSampler;
 use clap::Parser;
+use config::LevelList;
 use opts::Opts;
-use std::{collections::HashMap, path::Path, sync::LazyLock};
+use std::{collections::HashMap, fs, path::Path, sync::LazyLock};
 
 type BuilderFn = Box<dyn Fn() -> Box<dyn TestSampler> + Sync + Send>;
 
@@ -41,11 +43,11 @@ fn main() -> eyre::Result<()> {
         difficulty,
     } = opts;
 
-    let configs: Vec<(f32, serde_json::Value)> = {
+    let configs: LevelList = {
         let config_dir = Path::new(env!("CARGO_MANIFEST_DIR")).join("config");
-        let config_file = config_dir.join(format!("{problem_id}.toml"));
+        let config_file = config_dir.join(format!("{problem_id}.json5"));
         let text = std::fs::read_to_string(config_file)?;
-        serde_json::from_str(&text)?
+        json5::from_str(&text)?
     };
 
     let difficulty_range = {
@@ -55,7 +57,18 @@ fn main() -> eyre::Result<()> {
     };
     let builder_fn = &SAMPLER_TAB[problem_id.as_str()];
     let mut sampler = builder_fn();
-    let _samples = sampler.sample_many(&configs, difficulty_range, num_tests);
+    let samples = sampler.sample_many(&configs, difficulty_range, num_tests);
+
+    let output_dir = Path::new(&problem_id);
+    fs::create_dir(output_dir)?;
+
+    for (ix, sample) in samples.into_iter().enumerate() {
+        let input_file = output_dir.join(format!("{ix}.in"));
+        fs::write(&input_file, sample.input)?;
+
+        let output_file = output_dir.join(format!("{ix}.out"));
+        fs::write(&output_file, sample.output)?;
+    }
 
     Ok(())
 }

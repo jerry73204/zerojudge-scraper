@@ -11,7 +11,7 @@ pub struct Opts {
     pub num_tests: u32,
 
     #[clap(
-        default_value = "default_difficulty",
+        default_value = "0-100",
         value_parser = parse_difficulty
     )]
     pub difficulty: RangeInclusive<u32>,

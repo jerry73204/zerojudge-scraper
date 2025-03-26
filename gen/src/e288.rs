@@ -1,6 +1,11 @@
 use crate::sampler::{TestCase, TestSampler};
 use itertools::{Itertools, izip};
-use rand::{Rng, rngs::ThreadRng, seq::IndexedRandom};
+use rand::{
+    Rng, SeedableRng,
+    rngs::{OsRng, ThreadRng},
+    seq::IndexedRandom,
+};
+use rand_chacha::ChaCha20Rng;
 use serde::Deserialize;
 use std::{collections::HashMap, ops::RangeInclusive};
 
@@ -15,12 +20,14 @@ struct Config {
 }
 
 pub struct Sampler {
-    rng: ThreadRng,
+    rng: ChaCha20Rng,
 }
 
 impl TestSampler for Sampler {
     fn new() -> Self {
-        Sampler { rng: rand::rng() }
+        Sampler {
+            rng: ChaCha20Rng::from_os_rng(),
+        }
     }
 
     fn sample(&mut self, config: &serde_json::Value) -> TestCase {
