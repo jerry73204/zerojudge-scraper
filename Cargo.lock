@@ -2756,7 +2756,6 @@ dependencies = [
  "once_cell",
  "ordered-float",
  "rand 0.9.0",
- "rand_chacha 0.9.0",
  "rayon",
  "serde",
  "serde_json",

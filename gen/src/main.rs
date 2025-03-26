@@ -46,8 +46,7 @@ fn main() -> eyre::Result<()> {
     let configs: LevelList = {
         let config_dir = Path::new(env!("CARGO_MANIFEST_DIR")).join("config");
         let config_file = config_dir.join(format!("{problem_id}.json5"));
-        let text = std::fs::read_to_string(config_file)?;
-        json5::from_str(&text)?
+        LevelList::open(config_file)?
     };
 
     let difficulty_range = {
@@ -56,7 +55,7 @@ fn main() -> eyre::Result<()> {
         start..=end
     };
     let builder_fn = &SAMPLER_TAB[problem_id.as_str()];
-    let mut sampler = builder_fn();
+    let sampler = builder_fn();
     let samples = sampler.sample_many(&configs, difficulty_range, num_tests);
 
     let output_dir = Path::new(&problem_id);

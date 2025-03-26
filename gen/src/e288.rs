@@ -1,13 +1,8 @@
 use crate::sampler::{TestCase, TestSampler};
 use itertools::{Itertools, izip};
-use rand::{
-    Rng, SeedableRng,
-    rngs::{OsRng, ThreadRng},
-    seq::IndexedRandom,
-};
-use rand_chacha::ChaCha20Rng;
+use rand::{Rng, seq::IndexedRandom};
 use serde::Deserialize;
-use std::{collections::HashMap, ops::RangeInclusive};
+use std::{collections::HashMap, marker::PhantomData, ops::RangeInclusive};
 
 static ALL_LETTERS: &str = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
@@ -20,18 +15,18 @@ struct Config {
 }
 
 pub struct Sampler {
-    rng: ChaCha20Rng,
+    _private: PhantomData<()>,
 }
 
 impl TestSampler for Sampler {
     fn new() -> Self {
         Sampler {
-            rng: ChaCha20Rng::from_os_rng(),
+            _private: PhantomData,
         }
     }
 
-    fn sample(&mut self, config: &serde_json::Value) -> TestCase {
-        let Self { rng } = self;
+    fn sample(&self, config: &serde_json::Value) -> TestCase {
+        let mut rng = rand::rng();
         let Config {
             m_range,
             n_range,
@@ -43,7 +38,7 @@ impl TestSampler for Sampler {
         let n = rng.random_range(n_range);
         let letters: Vec<char> = ALL_LETTERS
             .as_bytes()
-            .choose_multiple(rng, m as usize)
+            .choose_multiple(&mut rng, m as usize)
             .map(|&b| b as char)
             .collect();
 
@@ -53,11 +48,11 @@ impl TestSampler for Sampler {
 
                 if repeat {
                     (0..len)
-                        .map(|_| *letters.choose(rng).unwrap())
+                        .map(|_| *letters.choose(&mut rng).unwrap())
                         .take(len)
                         .collect()
                 } else {
-                    letters.choose_multiple(rng, len).copied().collect()
+                    letters.choose_multiple(&mut rng, len).copied().collect()
                 }
             })
             .collect();
