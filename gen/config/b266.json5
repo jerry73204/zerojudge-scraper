@@ -1,0 +1,32 @@
+[
+    {
+	level: 20,
+	row_range: [1, 10],
+	column_range: [1, 10],
+	op_range: [1, 1],
+    },
+    {
+	level: 40,
+	row_range: [1, 10],
+	column_range: [1, 10],
+	op_range: [1, 1],
+    },
+    {
+	level: 60,
+	row_range: [1, 10],
+	column_range: [1, 10],
+	op_range: [1, 1],
+    },
+    {
+	level: 80,
+	row_range: [5, 10],
+	column_range: [5, 10],
+	op_range: [50, 100],
+    },
+    {
+	level: 100,
+	row_range: [10, 10],
+	column_range: [10, 10],
+	op_range: [100, 100],
+    },
+]
