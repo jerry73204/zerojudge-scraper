@@ -1,6 +1,5 @@
-pub mod b266;
 pub mod config;
-pub mod e288;
+pub mod generators;
 pub mod opts;
 pub mod sampler;
 
@@ -22,7 +21,7 @@ macro_rules! tab {
             let list = [$(
 		{
 		    let builder_fn = || -> Box<dyn TestSampler> {
-			Box::new($id::Sampler::new())
+			Box::new(crate::generators::$id::Sampler::new())
 		    };
 		    let builder_fn: BuilderFn = Box::new(builder_fn);
 		    (stringify!($id), builder_fn)
