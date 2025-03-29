@@ -33,7 +33,8 @@ macro_rules! tab {
     };
 }
 
-static SAMPLER_TAB: LazyLock<HashMap<&str, BuilderFn>> = LazyLock::new(|| tab!(e288, b266, b294));
+static SAMPLER_TAB: LazyLock<HashMap<&str, BuilderFn>> =
+    LazyLock::new(|| tab!(e288, b266, b294, b966));
 
 fn main() -> eyre::Result<()> {
     let opts = Opts::parse();
