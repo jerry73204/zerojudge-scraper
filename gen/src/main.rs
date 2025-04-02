@@ -2,6 +2,7 @@ pub mod config;
 pub mod generators;
 pub mod opts;
 pub mod sampler;
+pub mod utils;
 
 use crate::sampler::TestSampler;
 use clap::Parser;
@@ -34,7 +35,7 @@ macro_rules! tab {
 }
 
 static SAMPLER_TAB: LazyLock<HashMap<&str, BuilderFn>> =
-    LazyLock::new(|| tab!(e288, b266, b294, b966));
+    LazyLock::new(|| tab!(e288, b266, b294, b966, b967));
 
 fn main() -> eyre::Result<()> {
     let opts = Opts::parse();
