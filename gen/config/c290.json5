@@ -1,0 +1,14 @@
+[
+    {
+	level: 20,
+	len_range: [4, 4],
+    },
+    {
+	level: 50,
+	len_range: [1, 9],
+    },
+    {
+	level: 100,
+	len_range: [1, 1000],
+    },
+]
