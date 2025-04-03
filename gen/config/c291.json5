@@ -1,0 +1,15 @@
+[
+    {
+	level: 20,
+        n_range: [1, 100],
+	max_group_size: 2,
+    },
+    {
+	level: 50,
+        n_range: [1, 1000],
+    },
+    {
+	level: 100,
+        n_range: [1001, 50000],
+    },
+]
