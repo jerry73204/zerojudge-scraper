@@ -1,2 +1,2 @@
 #!/bin/sh
-cargo run --release -- $@
+cargo run --bin zerojudge-testcase-generator --release -- $@
