@@ -15,7 +15,7 @@ All scrapped problem websites and solutions are located in the
   is the problem description converted to Markdown.
 - [`data/b266/solution`](data/b266/solution) is the solution in C or
   C++.
-- [`data/b266/tests`](data/b266/tests) stores the testcases. It's
+- [`data/b266/with_tests`](data/b266/with_tests) stores the testcases. It's
   usualy 10 intput/output pairs.
 
 ## Generate Testcases
