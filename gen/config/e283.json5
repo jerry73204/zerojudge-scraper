@@ -1,0 +1,17 @@
+[
+    {
+        level: 20,
+        string_count: [1, 5],
+        max_string_length: [1, 4],
+    },
+    {
+        level: 60,
+        string_count: [5, 20],
+        max_string_length: [1, 20],
+    },
+    {
+        level: 100,
+        string_count: [20, 100],
+        max_string_length: [50, 1000],
+    },
+]

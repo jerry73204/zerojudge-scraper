@@ -1,0 +1,14 @@
+[
+    {
+        level: 50,
+        n_range: [1, 100],
+        value_range: [1, 100],
+        limited_range: true,
+    },
+    {
+        level: 100,
+        n_range: [100, 300000],
+        value_range: [1, 10000000],
+        limited_range: false,
+    },
+]

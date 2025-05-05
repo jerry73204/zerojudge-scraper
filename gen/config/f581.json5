@@ -1,0 +1,23 @@
+[
+    {
+        level: 20,
+        n_range: [1, 50],
+        m_range: [1, 10],
+        p_range: [1, 100],
+        q_range_factor: [0.1, 0.5], // Small task requirements
+    },
+    {
+        level: 50,
+        n_range: [50, 1000],
+        m_range: [10, 100],
+        p_range: [1, 1000],
+        q_range_factor: [0.2, 0.7], // Medium task requirements
+    },
+    {
+        level: 100,
+        n_range: [1000, 200000],
+        m_range: [100, 20000],
+        p_range: [1, 10000],
+        q_range_factor: [0.3, 0.9], // Larger task requirements
+    },
+]

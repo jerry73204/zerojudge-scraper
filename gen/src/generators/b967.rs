@@ -33,7 +33,7 @@ impl TestSampler for Sampler {
     fn sample(&self, config: &serde_json::Value) -> TestCase {
         let Config {
             n_range,
-            max_degree,
+            max_degree: _,
         } = serde_json::from_value(config.clone()).unwrap();
         assert!(*n_range.start() >= 2);
 

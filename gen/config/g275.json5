@@ -1,0 +1,17 @@
+[
+    {
+        level: 30,
+        n_range: [1, 5],
+        valid_percent: [30, 70],
+    },
+    {
+        level: 60,
+        n_range: [5, 15],
+        valid_percent: [20, 80],
+    },
+    {
+        level: 100,
+        n_range: [15, 30],
+        valid_percent: [10, 90],
+    },
+]

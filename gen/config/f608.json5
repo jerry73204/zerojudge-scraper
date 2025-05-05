@@ -1,0 +1,17 @@
+[
+    {
+        level: 20,
+        n_range: [1, 100],
+        coordinate_range: [1, 100],
+    },
+    {
+        level: 50,
+        n_range: [100, 1000],
+        coordinate_range: [1, 1000],
+    },
+    {
+        level: 100,
+        n_range: [1000, 50000], // Reduced from 200000 to 50000
+        coordinate_range: [1, 10000], // Reduced from 10000000 to 10000
+    },
+]

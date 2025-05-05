@@ -1,0 +1,26 @@
+[
+    {
+        level: 20,
+        n_range: [1, 10],
+        a_b_range: [1, 100],
+        transactions_range: [1, 5],
+        actions_range: [1, 5],
+        remove_actions_pct: 0.0, // No remove actions for easy tests
+    },
+    {
+        level: 50,
+        n_range: [10, 50],
+        a_b_range: [1, 100],
+        transactions_range: [5, 10],
+        actions_range: [5, 10],
+        remove_actions_pct: 0.2, // Some remove actions
+    },
+    {
+        level: 100,
+        n_range: [50, 100],
+        a_b_range: [1, 100],
+        transactions_range: [10, 20],
+        actions_range: [10, 20],
+        remove_actions_pct: 0.4, // More remove actions for hard tests
+    },
+]

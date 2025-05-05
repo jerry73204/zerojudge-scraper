@@ -1,0 +1,17 @@
+[
+    {
+        level: 5,
+        n_range: [5, 10],
+        k_range: [1, 5],
+    },
+    {
+        level: 50,
+        n_range: [10, 100],
+        k_range: [1, 10],
+    },
+    {
+        level: 100,
+        n_range: [100, 1000],
+        k_range: [1, 100],
+    },
+]

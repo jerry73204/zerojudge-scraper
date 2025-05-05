@@ -1,0 +1,16 @@
+[
+    {
+        level: 30,
+        r_range: [1, 10],
+        c_range: [1, 10],
+        m_range: [1, 5],
+        value_range: [0, 9],
+    },
+    {
+        level: 100,
+        r_range: [1, 10],
+        c_range: [1, 10],
+        m_range: [1, 10],
+        value_range: [0, 9],
+    },
+]
